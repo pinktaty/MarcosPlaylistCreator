@@ -11,7 +11,7 @@ export async function fetchSpotifyToken(code: string, codeVerifier: string): Pro
                 client_id: clientId,
                 grant_type: "authorization_code",
                 code,
-                redirect_uri: "http://localhost:3000/workspace",
+                redirect_uri: process.env.NEXT_PUBLIC_REDIRECT_URI ?? "http://localhost:3000/workspace",
                 code_verifier: codeVerifier,
             }).toString(),
         };
@@ -30,7 +30,17 @@ export async function fetchSpotifyToken(code: string, codeVerifier: string): Pro
 }
 
 export async function fetchSpotifyData<T>(endpoint: string): Promise<T | null> {
-    const token = sessionStorage.getItem("spotify_access_token") || "";
+    // Ensure this runs only on the client side
+    if (typeof window === "undefined") {
+        return null;
+    }
+
+    const token = window.sessionStorage.getItem("spotify_access_token") || "";
+    if (!token) {
+        console.error("No access token found.");
+        return null;
+    }
+
     try {
         const response = await fetch(`https://api.spotify.com/v1/${endpoint}`, {
             method: "GET",
@@ -57,7 +67,16 @@ export async function fetchSpotifyData<T>(endpoint: string): Promise<T | null> {
 }
 
 export async function createPlaylist(name: string, description: string, isPublic: boolean): Promise<any> {
-    const token = sessionStorage.getItem("spotify_access_token") || "";
+    // Ensure this runs only on the client side
+    if (typeof window === "undefined") {
+        return null;
+    }
+
+    const token = window.sessionStorage.getItem("spotify_access_token") || "";
+    if (!token) {
+        console.error("No access token found.");
+        return null;
+    }
 
     const fetchUserId = async () => {
         try {
@@ -71,7 +90,7 @@ export async function createPlaylist(name: string, description: string, isPublic
     };
 
     const userId = await fetchUserId();
-    if (!userId) return;
+    if (!userId) return null;
 
     try {
         const payload = {
@@ -102,7 +121,16 @@ export async function createPlaylist(name: string, description: string, isPublic
 }
 
 export async function fetchSearchSongs(songName: string, artistName: string): Promise<ObtainTrack | null> {
-    const token = sessionStorage.getItem("spotify_access_token") || "";
+    // Ensure this runs only on the client side
+    if (typeof window === "undefined") {
+        return null;
+    }
+
+    const token = window.sessionStorage.getItem("spotify_access_token") || "";
+    if (!token) {
+        console.error("No access token found.");
+        return null;
+    }
 
     try {
         const query = encodeURIComponent(`${songName} artist:${artistName}`);
@@ -133,7 +161,16 @@ export async function fetchSearchSongs(songName: string, artistName: string): Pr
 }
 
 export async function addSong(playlistId: string, uris: string[]): Promise<any> {
-    const token = sessionStorage.getItem("spotify_access_token") || "";
+    // Ensure this runs only on the client side
+    if (typeof window === "undefined") {
+        return null;
+    }
+
+    const token = window.sessionStorage.getItem("spotify_access_token") || "";
+    if (!token) {
+        console.error("No access token found.");
+        return null;
+    }
 
     if (!playlistId || uris.length === 0) {
         return null;

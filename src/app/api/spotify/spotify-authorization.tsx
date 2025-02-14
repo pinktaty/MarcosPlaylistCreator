@@ -1,9 +1,14 @@
-import {fetchSpotifyToken} from "@/app/api/spotify/call-api";
+import { fetchSpotifyToken } from "@/app/api/spotify/call-api";
 import { redirect } from "next/navigation";
 
 // TODO: APLICAR FUNCION PARA REFRESCAR EL TOKEN
 
 async function generateCodeVerifier(): Promise<string> {
+    // Ensure this runs only on the client side
+    if (typeof window === "undefined") {
+        throw new Error("This function can only be executed in the browser.");
+    }
+
     const generateRandomString = (length: number): string => {
         const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         const values = crypto.getRandomValues(new Uint8Array(length));
@@ -32,15 +37,25 @@ async function generateCodeVerifier(): Promise<string> {
 }
 
 function isTokenValid(): boolean {
-    const expirationTime = sessionStorage.getItem('spotify_expires_at');
+    // Ensure this runs only on the client side
+    if (typeof window === "undefined") {
+        return false;
+    }
+
+    const expirationTime = window.sessionStorage.getItem('spotify_expires_at');
     if (!expirationTime) return false;
 
     return Date.now() < Number(expirationTime);
 }
 
 const requestAuthorization = async (): Promise<void> => {
+    // Ensure this runs only on the client side
+    if (typeof window === "undefined") {
+        return;
+    }
+
     const clientId: string = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID ?? "";
-    const redirectUri: string ='http://localhost:3000/workspace'
+    const redirectUri: string = process.env.NEXT_PUBLIC_REDIRECT_URI ?? "http://localhost:3000/workspace";
 
     if (isTokenValid()) {
         redirect(redirectUri);
@@ -68,28 +83,39 @@ const requestAuthorization = async (): Promise<void> => {
 };
 
 export const getToken = async (): Promise<void> => {
+    // Ensure this runs only on the client side
+    if (typeof window === "undefined") {
+        return;
+    }
+
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
     if (!code) throw new Error('Authorization code not found in URL.');
 
-    const codeVerifier = sessionStorage.getItem('spotify_code_verifier');
+    const codeVerifier = window.sessionStorage.getItem('spotify_code_verifier');
     if (!codeVerifier) throw new Error('Code verifier not found.');
 
     const data = await fetchSpotifyToken(code, codeVerifier);
 
     if (data !== null) {
-        sessionStorage.setItem('spotify_access_token', data.access_token);
-        sessionStorage.setItem('spotify_refresh_token', data.refresh_token);
+        window.sessionStorage.setItem('spotify_access_token', data.access_token);
+        window.sessionStorage.setItem('spotify_refresh_token', data.refresh_token);
 
         const expiresAt = Date.now() + data.expires_in * 1000;
-        sessionStorage.setItem('spotify_expires_at', expiresAt.toString());
+        window.sessionStorage.setItem('spotify_expires_at', expiresAt.toString());
     }
 };
 
 export default function Login() {
+    const handleClick = () => {
+        if (typeof window !== "undefined") {
+            requestAuthorization();
+        }
+    };
+
     return (
         <div className="flex items-center justify-center min-h-96">
-            <button className="bg-black" onClick={requestAuthorization}>
+            <button className="bg-black" onClick={handleClick}>
                 <h2 className="border-2 p-6 border-blue-300 border-opacity-60 rounded-2xl text-3xl">
                     Start
                 </h2>
