@@ -1,7 +1,6 @@
 export async function fetchSpotifyToken(code: string, codeVerifier: string): Promise<SpotifyTokenResponse | null> {
     const clientId: string = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID ?? "";
 
-    console.log(clientId)
     try {
         const payload: RequestInit = {
             method: "POST",
@@ -12,7 +11,7 @@ export async function fetchSpotifyToken(code: string, codeVerifier: string): Pro
                 client_id: clientId,
                 grant_type: "authorization_code",
                 code,
-                redirect_uri: process.env.NEXT_PUBLIC_REDIRECT_URI ?? "http://localhost:3000/workspace",
+                redirect_uri: "https://marcos-playlist-creator.vercel.app/workspace",
                 code_verifier: codeVerifier,
             }).toString(),
         };
