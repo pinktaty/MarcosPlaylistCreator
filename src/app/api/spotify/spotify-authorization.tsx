@@ -96,6 +96,7 @@ export const getToken = async (): Promise<void> => {
     if (!codeVerifier) throw new Error('Code verifier not found.');
 
     const data = await fetchSpotifyToken(code, codeVerifier);
+    console.log(data)
 
     if (data !== null) {
         window.sessionStorage.setItem('spotify_access_token', data.access_token);
