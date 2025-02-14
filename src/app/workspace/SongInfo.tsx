@@ -65,8 +65,8 @@ export default function SpotifyNowPlaying() {
             {data?.item != null ?
                 <Info/> :
                 <div className="md:mt-52 border-4 p-4 text-center border-hisPurple">
-                    <p>I like how you get lost into music. You're such a nice view.</p>
-                    <p></p>
+                    <p>I like how you get lost into music.</p>
+                    <p>You're such a nice view.</p>
                 </div>
             }
         </div>

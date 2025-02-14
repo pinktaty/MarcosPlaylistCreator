@@ -28,7 +28,11 @@ const letters: Letter[] = [
             " like a hug.\n" +
             "I hope (again) you can feel all the love I poured into this, it's all yours.\n" +
             "Thank you for all your kisses in between, they gave me all the strength I needed to keep pushing forward against all the damn bugs." },
-    { writtenNumber: "Four.", info: "Cuarta carta" },
+    { writtenNumber: "Four.", info: "To be honest, I do believe February 14th is a capitalist evil, but I had the vision of this tool/present and I just had to pursue it. (And it was the perfect excuse to something special for you, fun).\n" +
+            "I swear I'll finish it, Notion's API seems to hate me.\n" +
+            "Thank you for all the inspiration and impulse. Thank you for all the hugs, and the words, and the love. Thank you for all your support, and as always, your company.\n" +
+            "Thank you for giving me the opportunity to know you, I'm really glad I get to share a life with you.\n" +
+            "XOXO, happy Valentine's Day." },
 ];
 
 function AnimatedMessage() {
@@ -65,13 +69,12 @@ export default function Letter() {
     const [isMarcos, setMarcos] = useState(false);
     const [readingLetter, setReadingLetter] = useState(-1);
 
-    // TODO: DECIDIR CÓDIGO
     const authenticateMarcos = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         const code = formData.get("code") as string;
 
-        if (code === "Marcos") {
+        if (code === "AUUUU") {
             setMarcos(true);
         }
     };

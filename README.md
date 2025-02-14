@@ -1,1 +1,1 @@
-I little project made with love.
+A little project made with love.
