@@ -24,11 +24,12 @@ const options: string[] = [
 export default function Home() {
     const [loading, setLoading] = useState(false);
     const [service, setService] = useState(-1);
-    const codeVerifier: string | null = sessionStorage.getItem('spotify_code_verifier');
-    const accessToken: string | null = sessionStorage.getItem('spotify_access_token');
     const router = useRouter();
 
     useEffect(() => {
+        const codeVerifier: string | null = sessionStorage.getItem('spotify_code_verifier');
+        const accessToken: string | null = sessionStorage.getItem('spotify_access_token');
+        
         if (codeVerifier) {
             if (!accessToken) {
             getToken()
