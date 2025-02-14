@@ -29,7 +29,7 @@ export default function Home() {
     useEffect(() => {
         const codeVerifier: string | null = sessionStorage.getItem('spotify_code_verifier');
         const accessToken: string | null = sessionStorage.getItem('spotify_access_token');
-        
+
         if (codeVerifier) {
             if (!accessToken) {
             getToken()
