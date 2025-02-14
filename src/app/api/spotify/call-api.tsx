@@ -1,6 +1,7 @@
-const clientId: string = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID ?? "";
-
 export async function fetchSpotifyToken(code: string, codeVerifier: string): Promise<SpotifyTokenResponse | null> {
+    const clientId: string = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID ?? "";
+
+    console.log(clientId)
     try {
         const payload: RequestInit = {
             method: "POST",
@@ -17,6 +18,7 @@ export async function fetchSpotifyToken(code: string, codeVerifier: string): Pro
         };
 
         const response = await fetch("https://accounts.spotify.com/api/token", payload);
+        console.log(response);
         if (!response.ok) {
             throw new Error(`Error ${response.status}: ${response.statusText}`);
         }
