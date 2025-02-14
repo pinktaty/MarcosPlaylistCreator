@@ -55,7 +55,7 @@ const requestAuthorization = async (): Promise<void> => {
     }
 
     const clientId: string = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID ?? "";
-    const redirectUri: string = process.env.NEXT_PUBLIC_REDIRECT_URI ?? "http://localhost:3000/workspace";
+    const redirectUri: string = 'https://' + (process.env.VERCEL_URL ?? "localhost:3000") + "/workspace" ;
 
     if (isTokenValid()) {
         redirect(redirectUri);
